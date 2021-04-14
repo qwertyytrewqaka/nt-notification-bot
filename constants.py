@@ -12,4 +12,3 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 message_sent = False
 
 print("초기 설정 완료.")
-bot.sendMessage(chat_id, text="초기 설정을 완료하였습니다.")
