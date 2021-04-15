@@ -13,7 +13,7 @@ def nt_notify():
         downloads = soup.select("#list-body > li > div.wr-down.hidden-xs")
         title = soup.select("#list-body > li > div.wr-subject > a")
         latest_time = time[3].text
-        latest_downloads = downloads[6].text[1:]
+        latest_downloads = downloads[6].text[1:].replace(" ", "")
         latest_number = posts[6].text
         latest_title = title[6].text.partition("  ")[2].rpartition(" ")[0]
         name = soup.select('#list-body > li > div.wr-name.hidden-xs > a > span')
@@ -35,7 +35,7 @@ def nt_notify():
                     constants.bot.sendMessage(constants.chat_id, text="상추를 흔드는 글에 누가 답댓을 달아줬네요.")
                     print("요청 답글")
 
-        if latest_downloads not in {'0 ', ' 0 '} or latest_title in {"권한이 없는 게시물입니다. "}:
+        if latest_downloads != "0" or latest_title in {"권한이 없는 게시물입니다. "}:
             if not constants.message_sent:
                 constants.bot.sendMessage(constants.chat_id,
                                           text=" " + latest_time + " : " + "\n" + latest_member + " 님의 " + str(
