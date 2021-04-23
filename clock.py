@@ -8,7 +8,7 @@ def timed_job():
     main.main()
 
 
-sched.add_job(timed_job, 'interval', seconds=10, jitter=1)
+sched.add_job(timed_job, 'interval', max_instances=3, seconds=10, jitter=1)
 
 
 sched.start()
