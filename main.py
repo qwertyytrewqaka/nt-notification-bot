@@ -11,38 +11,37 @@ def nt_notify():
         posts = soup.select('#list-body > li > div.wr-num.hidden-xs')
         time = soup.select("#list-body > li > div.wr-date.hidden-xs > span")
         downloads = soup.select("#list-body > li > div.wr-down.hidden-xs")
-        title = soup.select("#list-body > li > div.wr-subject > a")
+        titles = soup.select("#list-body > li > div.wr-subject > a")
+        temp = soup.select("#list-body > li > div.wr-subject > a")
+
+        constants.before_number = constants.latest_number
+        constants.latest_number = posts[6].text
+        latest_link = temp[6]['href']
         latest_time = time[3].text
         latest_downloads = downloads[6].text[1:]
-        latest_number = posts[6].text
-        latest_title = title[6].text.partition("  ")[2].rpartition(" ")[0]
+        latest_title = titles[6].text.partition("  ")[2].rpartition(" ")[0]
         name = soup.select('#list-body > li > div.wr-name.hidden-xs > a > span')
         latest_member = name[6].text[1:]
 
         with open(os.path.join(constants.BASE_DIR, 'latest.txt'), 'r+') as f_read:
-            before_number = f_read.readline()
+            before_link = f_read.readline()
 
-        if before_number != latest_number:
+        if before_link != latest_link:
+            constants.history[1] = constants.history[0]
+            constants.history[0] = latest_link
             with open(os.path.join(constants.BASE_DIR, 'latest.txt'), 'w+') as f_write:
-                f_write.write(latest_number)
+                f_write.write(latest_link)
                 f_write.close()
 
-            if before_number < latest_number:
-                constants.message_sent = False
-                if constants.before_title != latest_title:
-                    print(latest_number, "번째", "새 글이 올라옴", "|", "제목:", latest_title)
-                else:
-                    constants.bot.sendMessage(constants.chat_id, text="상추를 흔드는 글에 누가 답댓을 달아줬네요.")
-                    print("요청 답글")
+            if constants.history[1] != latest_link:
+                print(constants.latest_number, "번째", "새 글이 올라옴", "|", "제목:", latest_title)
 
-        if latest_downloads not in {'0 ', ' 0 '} or latest_title in {"권한이 없는 게시물입니다. "}:
-            if not constants.message_sent:
-                constants.bot.sendMessage(constants.chat_id,
-                                          text=" " + latest_time + " : " + "\n" + latest_member + " 님의 " + str(
-                                              latest_number) +
-                                               "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + " : " + latest_downloads)
-                constants.message_sent = True
-                print(latest_number, "번째", "새 공유 글이 올라옴")
+                if latest_downloads not in {'0 ', ' 0 '} or latest_title in {"권한이 없는 게시물입니다. "}:
+                    constants.bot.sendMessage(constants.chat_id,
+                                              text=" " + latest_time + " : " + "\n" + latest_member + " 님의 " + str(
+                                                  constants.latest_number) +
+                                                   "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + " : " + latest_downloads)
+                    print(constants.latest_number, "번째", "새 공유 글이 올라옴")
 
 
 def main():
