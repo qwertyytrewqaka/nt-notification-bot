@@ -28,7 +28,7 @@ def nt_notify():
 
         if before_link != latest_link:
             constants.history[1] = constants.history[0]
-            constants.history[0] = latest_link
+            constants.history[0] = before_link
             with open(os.path.join(constants.BASE_DIR, 'latest.txt'), 'w+') as f_write:
                 f_write.write(latest_link)
                 f_write.close()
