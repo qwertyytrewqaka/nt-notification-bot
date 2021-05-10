@@ -2,46 +2,70 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import constants
-
+import sys
 
 def nt_notify():
-    with requests.get("https://newtoki95.com/toki_bl") as req:
+    with requests.get("https://newtoki95.com/toki_bl",  headers=constants.headers) as req:
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')
-        posts = soup.select('#list-body > li > div.wr-num.hidden-xs')
-        time = soup.select("#list-body > li > div.wr-date.hidden-xs > span")
-        downloads = soup.select("#list-body > li > div.wr-down.hidden-xs")
-        titles = soup.select("#list-body > li > div.wr-subject > a")
-        temp = soup.select("#list-body > li > div.wr-subject > a")
+        number = soup.select("#list-body > li > div.wr-num.hidden-xs")[6].text
+        time = soup.select("#list-body > li > div.wr-date.hidden-xs > span")[3].text
+        downloads = soup.select("#list-body > li > div.wr-down.hidden-xs")[6].text[1:].rstrip()
+        title = soup.select("#list-body > li > div.wr-subject > a")[6].text.partition("  ")[2].rpartition(" ")[0]
+        member = soup.select("#list-body > li > div.wr-name.hidden-xs > a > span")[6].text[1:].lstrip()
+        category = soup.select("#list-body > li > div.wr-subject > a > span.tack-icon")[6].text
+        link = soup.select("#list-body > li > div.wr-subject > a")[6]['href']
 
-        constants.before_number = constants.latest_number
-        constants.latest_number = posts[6].text
-        latest_link = temp[6]['href']
-        latest_time = time[3].text
-        latest_downloads = downloads[6].text[1:]
-        latest_title = titles[6].text.partition("  ")[2].rpartition(" ")[0]
-        name = soup.select('#list-body > li > div.wr-name.hidden-xs > a > span')
-        latest_member = name[6].text[1:]
+        print("첫번째:", number, time, downloads, title, member, category, link)
 
         with open(os.path.join(constants.BASE_DIR, 'latest.txt'), 'r+') as f_read:
-            before_link = f_read.readline()
+            before_number = f_read.readline()
+            if before_number != number:
+                with open(os.path.join(constants.BASE_DIR, "latest.txt"), "w+") as f_write:
+                    f_write.write(number)
+                    f_write.close()
 
-        if before_link != latest_link:
-            constants.history[1] = constants.history[0]
-            constants.history[0] = before_link
-            with open(os.path.join(constants.BASE_DIR, 'latest.txt'), 'w+') as f_write:
-                f_write.write(latest_link)
-                f_write.close()
+                if before_number <= number:
+                    print(number, "번째", "새 글이 올라옴", "|", "제목:", title)
 
-            if constants.history[1] != latest_link:
-                print(constants.latest_number, "번째", "새 글이 올라옴", "|", "제목:", latest_title)
+                    if category == "공유":
+                        constants.bot.sendMessage(constants.chat_id,
+                                                  text="분류: 공유" + "\n" + time + ": " + "\n" + member + "님의 " + str(number) +
+                                                       "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads)
+                        print(number, "번째", "새 공유탭 글이 올라옴")
 
-                if latest_downloads not in {'0 ', ' 0 '} or latest_title in {"권한이 없는 게시물입니다. "}:
-                    constants.bot.sendMessage(constants.chat_id,
-                                              text=" " + latest_time + " : " + "\n" + latest_member + " 님의 " + str(
-                                                  constants.latest_number) +
-                                                   "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + " : " + latest_downloads)
-                    print(constants.latest_number, "번째", "새 공유 글이 올라옴")
+                    elif int(downloads) > 0 and link not in constants.history:
+                        constants.history.insert(0, link)
+                        constants.history.pop()
+                        print(constants.history)
+                        constants.bot.sendMessage(constants.chat_id,
+                                                  text="첫번째 글:" + "\n" + "분류: " + category + " " + time + ": " + "\n" + member + "님의 "
+                                                       + str(number) + "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads
+                                                  + "\n" + "제목: " + title)
+
+                        print(number, "번째", "새 공유탭에 없는 공유글이 올라옴(1번째글)", "분류: ", category)
+
+            number = soup.select("#list-body > li > div.wr-num.hidden-xs")[7].text
+            time = soup.select("#list-body > li > div.wr-date.hidden-xs > span")[7].text
+            downloads = soup.select("#list-body > li > div.wr-down.hidden-xs")[7].text[1:].rstrip()
+            title = \
+                soup.select("#list-body > li > div.wr-subject > a")[7].text.partition("  ")[2].rpartition(" ")[0]
+            member = soup.select("#list-body > li > div.wr-name.hidden-xs > a > span")[7].text[1:].lstrip()
+            category = soup.select("#list-body > li > div.wr-subject > a > span.tack-icon")[7].text
+            link = soup.select("#list-body > li > div.wr-subject > a")[7]['href']
+
+            print("두번째:", number, time, downloads, title, member, category, link)
+
+            if int(downloads) > 0 and link not in constants.history and category != "공유" and not (time[-2] == '분' and int(time[:-2]) > 10):
+                constants.history.insert(0, link)
+                constants.history.pop()
+                print(constants.history)
+                constants.bot.sendMessage(constants.chat_id,
+                                          text="첫번째 글:" + "\n" + "분류: " + category + " " + time + ": " + "\n" + member + "님의 "
+                                               + str(number) + "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads
+                                               + "\n" + "제목: " + title)
+
+                print(number, "번째", "새 공유탭에 없는 공유글이 올라옴(2번째글)", "분류: ", category)
 
 
 def main():
@@ -51,10 +75,9 @@ def main():
     except requests.exceptions.ChunkedEncodingError:
         print("에러가 발생했습니다. (ChunkedEncodingError) 다시 연결하는 중...")
 
-    except requests.exceptions.ConnectionError:
-        constants.connection_error_count += 1
+    except IndexError:
+        constants.index_error_count += 1
         print("에러가 발생했습니다. (ConnectionError) 다시 연결하는 중...")
-        if constants.connection_error_count >= 5:
-            constants.connection_error_count = 0
-            input("인터넷 연결을 확인해 주세요.(Press Any Key to Continue)")
-            constants.bot.sendMessage(constants.chat_id, text="인터넷 연결이 끊어진 후 다시 연결되었습니다.")
+        if constants.index_error_count >= 30:
+            constants.index_error_count = 0
+            constants.bot.sendMessage(constants.chat_id, text="서버 상태가 불안정하거나 뭔가 문제가 생긴듯 합니다." + "\n" + "고쳐질 때까지 이 알림 올거니까 ㅆ읽으러 가세요")
