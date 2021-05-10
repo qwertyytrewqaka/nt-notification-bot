@@ -46,7 +46,7 @@ def nt_notify():
                         print(number, "번째", "새 공유탭에 없는 공유글이 올라옴(1번째글)", "분류: ", category)
 
             number = soup.select("#list-body > li > div.wr-num.hidden-xs")[7].text
-            time = soup.select("#list-body > li > div.wr-date.hidden-xs > span")[7].text
+            time = soup.select("#list-body > li > div.wr-date.hidden-xs > span")[4].text
             downloads = soup.select("#list-body > li > div.wr-down.hidden-xs")[7].text[1:].rstrip()
             title = \
                 soup.select("#list-body > li > div.wr-subject > a")[7].text.partition("  ")[2].rpartition(" ")[0]
