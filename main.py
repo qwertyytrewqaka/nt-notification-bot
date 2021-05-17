@@ -33,7 +33,7 @@ def nt_notify():
                                                        "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads)
                         print(number, "번째", "새 공유탭 글이 올라옴")
 
-            if int(downloads) > 0 and link not in constants.history and category != "공유":
+            if 50 > int(downloads) > 0 and link not in constants.history and category != "공유":
                 constants.history.insert(0, link)
                 constants.history.pop()
                 print(constants.history)
@@ -54,7 +54,7 @@ def nt_notify():
             link = soup.select("#list-body > li > div.wr-subject > a")[7]['href']
             print("두번째:", number, time, downloads, title, member, category, link)
 
-            if int(downloads) > 0 and link not in constants.history and category != "공유" and not (time[-2] == '분' and int(time[:-2]) > 10):
+            if 50 > int(downloads) > 0 and link not in constants.history and category != "공유" and not (time[-2] == '분' and int(time[:-2]) > 10):
                 constants.history.insert(0, link)
                 constants.history.pop()
                 print(constants.history)
