@@ -7,4 +7,4 @@ bot = telegram.Bot(token=token)
 headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 history = ["", "", "", "", "", ""]
-index_error_count = 0
+server_state = 0

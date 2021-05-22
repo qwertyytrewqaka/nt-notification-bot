@@ -64,7 +64,7 @@ def nt_notify():
                                                + "\n" + "제목: " + title)
 
                 print(number, "번째", "새 공유탭에 없는 공유글이 올라옴(2번째글)", "분류: ", category)
-
+                
 
 def main():
     try:
@@ -74,8 +74,13 @@ def main():
         print("에러가 발생했습니다. (ChunkedEncodingError) 다시 연결하는 중...")
 
     except IndexError:
-        constants.index_error_count += 1
+        if constants.server_state == 0:
+            constants.bot.sendMessage(constants.chat_id,
+                                          text="서버 오류/문제 생김")
+        constants.server_state = 1
         print("에러가 발생했습니다. (ConnectionError) 다시 연결하는 중...")
-        if constants.index_error_count >= 30:
-            constants.index_error_count = 0
-            constants.bot.sendMessage(constants.chat_id, text="서버 상태가 불안정하거나 뭔가 문제가 생긴듯 합니다." + "\n" + "고쳐질 때까지 이 알림 올거니까 ㅆ읽으러 가세요")
+
+    else:
+        if constants.server_state == 1:
+                    constants.bot.sendMessage(constants.chat_id, text="서버 오류/문제 해결됨")
+        constants.server_state = 0
