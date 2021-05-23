@@ -8,3 +8,4 @@ headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/53
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 history = ["", "", "", "", "", ""]
 server_state = 0
+errorcount = 0

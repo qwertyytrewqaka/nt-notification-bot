@@ -75,12 +75,15 @@ def main():
 
     except IndexError:
         if constants.server_state == 0:
+            constants.errorcount += 1
+        if constants.errorcount == 50:
             constants.bot.sendMessage(constants.chat_id,
-                                          text="서버 오류/문제 생김")
+                                          text="서버 오류/기타 문제 생김")
         constants.server_state = 1
-        print("에러가 발생했습니다. (ConnectionError) 다시 연결하는 중...")
+        print("에러가 발생했습니다. (IndexError) 다시 연결하는 중...", constants.errorcount)
 
     else:
-        if constants.server_state == 1:
-                    constants.bot.sendMessage(constants.chat_id, text="서버 오류/문제 해결됨")
+        if constants.server_state == 1 and constants.errorcount >= 50:
+                    constants.bot.sendMessage(constants.chat_id, text="서버 오류/기타 문제 해결됨")
+                    constants.errorcount = 0
         constants.server_state = 0
