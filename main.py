@@ -27,7 +27,7 @@ def nt_notify():
                 if before_number <= number:
                     print(number, "번째", "새 글이 올라옴", "|", "제목:", title)
 
-                    if category == "공유":
+                    if category == "공유" and not (time[-2] == '분' and int(time[:-2]) > 1):
                         constants.bot.sendMessage(constants.chat_id,
                                                   text="분류: 공유" + "\n" + time + ": " + "\n" + member + "님의 " + str(number) +
                                                        "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads)
