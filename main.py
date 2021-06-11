@@ -82,7 +82,7 @@ def main():
         print("에러가 발생했습니다. (ChunkedEncodingError) 다시 연결하는 중...")
 
     except IndexError:
-        if constants.server_state == 0:
+        if constants.server_state == 1:
             constants.errorcount += 1
         if constants.errorcount == 50:
             constants.bot.sendMessage(constants.chat_id,
