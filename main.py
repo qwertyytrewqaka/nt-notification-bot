@@ -35,9 +35,8 @@ def nt_notify():
 
                     if category == "공유" and not (time[-2] == '분' and int(time[:-2]) > 1):
                         constants.bot.sendMessage(constants.chat_id,
-                                                  text="분류: 공유" + "\n" + time + ": " + "\n" + member + "님의 " + str(
-                                                      number) +
-                                                       "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads)
+                                                  text=time + ": " + member + "님의 " + str(number) +
+                                                       "번째 새 글이 올라왔어요!" + "\n" + "분류: 공유, " +  "다운로드 수" + ": " + downloads)
                         print(number, "번째", "새 공유탭 글이 올라옴")
 
             if 50 > int(downloads) > 0 and link not in constants.history and category != "공유":
@@ -45,10 +44,10 @@ def nt_notify():
                 constants.history.pop()
                 print(constants.history)
                 constants.bot.sendMessage(constants.chat_id,
-                                          text="첫번째 글:" + "\n" + "분류: " + category + " " + time + ": " + "\n" + member + "님의 "
-                                               + str(number) + "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads
+                                          text=time + ": " + member + "님의 "
+                                               + str(number) + "번째 새 글이 올라왔어요!" + "\n" + 
+                                               "첫번째 글, " + "분류: " + category + ", " + "다운로드 수" + ": " + downloads
                                                + "\n" + "제목: " + title)
-
                 print(number, "번째", "새 공유탭에 없는 공유글이 올라옴(1번째글)", "분류: ", category)
 
             number = posts[constants.latest_number+1].select("div.wr-num.hidden-xs")[0].text
@@ -67,8 +66,9 @@ def nt_notify():
                 constants.history.pop()
                 print(constants.history)
                 constants.bot.sendMessage(constants.chat_id,
-                                          text="첫번째 글:" + "\n" + "분류: " + category + " " + time + ": " + "\n" + member + "님의 "
-                                               + str(number) + "번째 새 글이 올라왔어요!" + '\n' + "다운로드 수" + ": " + downloads
+                                          text=time + ": " + member + "님의 "
+                                               + str(number) + "번째 새 글이 올라왔어요!" + "\n" + 
+                                               "두번째 글, " + "분류: " + category + ", " + "다운로드 수" + ": " + downloads
                                                + "\n" + "제목: " + title)
 
                 print(number, "번째", "새 공유탭에 없는 공유글이 올라옴(2번째글)", "분류: ", category)
