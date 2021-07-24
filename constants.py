@@ -9,3 +9,5 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 history = ["", "", "", "", "", ""]
 server_state = 0
 errorcount = 0
+
+bot.sendMessage(chat_id, text="초기설정완료")
