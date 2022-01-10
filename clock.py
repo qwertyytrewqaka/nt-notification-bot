@@ -8,7 +8,7 @@ sched = BlockingScheduler()
 def timed_job():
     main.main()
 
-sched.add_job(timed_job, 'interval', seconds=10, jitter=1)
+sched.add_job(timed_job, 'interval', seconds=20, jitter=1)
 
 
 sched.start()
