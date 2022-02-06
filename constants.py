@@ -9,3 +9,5 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 history = ["", "", "", "", "", ""]
 server_state = 0
 errorcount = 0
+latest_number = 0
+k_number = 0
